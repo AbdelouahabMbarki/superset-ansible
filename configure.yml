@@ -1,0 +1,4 @@
+---
+- import_playbook: playbooks/nginx/main.yml
+- import_playbook: playbooks/app/main.yml
+- import_playbook: playbooks/supervisord/main.yml

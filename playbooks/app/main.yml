@@ -1,0 +1,42 @@
+---
+- hosts: localhost
+  connection: local
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Install build tools
+      apt:
+        name: "{{ build_packages | list }}"
+        state: present
+
+    - name: Create a superset directory 
+      ansible.builtin.file:
+        path: /var/www/superset
+        state: directory
+        mode: '0755'
+
+    - name: Create a superset directory 
+      ansible.builtin.file:
+        path: /var/log/superset
+        state: directory
+        mode: '0755'
+
+    - name: Install virtualenv via pip
+      pip:
+        name: virtualenv
+        executable: pip3
+     
+    - name: Install superset via pip
+      pip:
+        name: "{{ python_depandencies | list }}"
+        virtualenv: /var/www/superset/supersetvenv
+        virtualenv_python: python3
+
+    - name: Template a file to superset_config.py
+      ansible.builtin.template:
+        src: templates/superset_config.j2
+        dest: /var/www/superset/supersetvenv/lib/python3.8/site-packages/superset_config.py
+        mode: '0644'

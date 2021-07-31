@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  connection: local
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  roles:
+    - geerlingguy.supervisor
+
+  tasks:
+    - name: "just execute a ls -lrt command"
+      shell: "ls -lrt"
+      register: "output"
+    
+    - debug: var=output.stdout_lines
